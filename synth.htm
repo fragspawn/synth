@@ -1,0 +1,990 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  
+<script src="./knob/jquery.rotaryswitch.js"></script>
+<link href="./knob/jquery.rotaryswitch.css" rel="stylesheet" type="text/css">  
+  
+<script src="./jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<link href="./jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" type="text/css">       
+  
+<script>
+  
+// declare the core loop function varialbe globally
+var playIntervals = false;
+// declare the audio object globally
+var audioCtx = new AudioContext();
+var gainNode = audioCtx.createGain();
+    
+window.onload = function() {
+
+  addEventListener("keydown", function(e) { 
+      if(e.keyCode == 27) {
+        hideModal();
+      }    
+    }, false);  
+    
+    // SET EVENT LISTNERS 
+    document.getElementById('note1').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note2').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note3').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note4').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note5').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note6').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note7').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note8').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note9').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note10').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note11').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note12').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note13').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note14').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note15').addEventListener("click", function(e) { doNote(e)}, false);
+    document.getElementById('note16').addEventListener("click", function(e) { doNote(e)}, false);
+    
+    document.getElementById('start_stop').addEventListener("click", function(e) { doPlay_Pause(e)}, false);
+    document.getElementById('note_tie').addEventListener("click", function(e) { set_unset_tie(e)}, false);
+    document.getElementById('note_rest').addEventListener("click", function(e) { set_unset_rest(e)}, false);
+    document.getElementById('note_accent').addEventListener("click", function(e) { set_unset_accent(e)}, false);
+    
+    //document.getElementById('tempo1').addEventListener("change", function(e) { set_tempo(e)}, false);
+    document.getElementById('volume1').addEventListener("change", function(e) { set_volume(e)}, false);
+    //document.getElementById('note_pitch').addEventListener("change", function(e) { set_pitch(e)}, false);
+  
+   // document.getElementById('attack1').addEventListener("change", function(e) { set_attack(e)}, false);
+   // document.getElementById('decay1').addEventListener("change", function(e) { set_decay(e)}, false);
+   // document.getElementById('sustain1').addEventListener("change", function(e) { set_sustain(e)}, false);
+   // document.getElementById('release1').addEventListener("change", function(e) { set_release(e)}, false);
+ 
+    // Set localstorage
+    localStorage.setItem('loop', 'stop');
+    play1_led.style.background = 'black';
+      
+    localStorage.setItem('sustain', 500);
+    localStorage.setItem('tempo', 500);
+    localStorage.setItem('volume', 10);
+  
+    localStorage.setItem('note1', 'off');
+    localStorage.setItem('note1rest', 'on');
+    localStorage.setItem('note1tie', 'off');
+    localStorage.setItem('note1accent', 'off');
+    localStorage.setItem('note1pitch', 440);
+    
+    localStorage.setItem('note2', 'off');
+    localStorage.setItem('note2rest', 'on');
+    localStorage.setItem('note2tie', 'off');
+    localStorage.setItem('note2accent', 'off');
+    localStorage.setItem('note2pitch', 440);     
+    
+    localStorage.setItem('note3', 'off');
+    localStorage.setItem('note3rest', 'on');
+    localStorage.setItem('note3tie', 'off');
+    localStorage.setItem('note3accent', 'off');
+    localStorage.setItem('note3pitch', 440);   
+    
+    localStorage.setItem('note4', 'off');
+    localStorage.setItem('note4rest', 'on');
+    localStorage.setItem('note4tie', 'off');
+    localStorage.setItem('note4accent', 'off');
+    localStorage.setItem('note4pitch', 440);   
+
+    localStorage.setItem('note5', 'off');
+    localStorage.setItem('note5rest', 'on');
+    localStorage.setItem('note5tie', 'off');
+    localStorage.setItem('note5accent', 'off');
+    localStorage.setItem('note5pitch', 440);   
+    
+    localStorage.setItem('note6', 'off');
+    localStorage.setItem('note6rest', 'on');
+    localStorage.setItem('note6tie', 'off');
+    localStorage.setItem('note6accent', 'off');
+    localStorage.setItem('note6pitch', 440);   
+    
+    localStorage.setItem('note7', 'off');
+    localStorage.setItem('note7rest', 'on');
+    localStorage.setItem('note7tie', 'off');
+    localStorage.setItem('note7accent', 'off');
+    localStorage.setItem('note7pitch', 440);  
+    
+    localStorage.setItem('note8', 'off');
+    localStorage.setItem('note8rest', 'on');
+    localStorage.setItem('note8tie', 'off');
+    localStorage.setItem('note8accent', 'off');
+    localStorage.setItem('note8pitch', 440);   
+
+    localStorage.setItem('note9', 'off');
+    localStorage.setItem('note9rest', 'on');
+    localStorage.setItem('note9tie', 'off');
+    localStorage.setItem('note9accent', 'off');
+    localStorage.setItem('note9pitch', 440);   
+    
+    localStorage.setItem('note10', 'off');
+    localStorage.setItem('note10rest', 'on');
+    localStorage.setItem('note10tie', 'off');
+    localStorage.setItem('note10accent', 'off');
+    localStorage.setItem('note10pitch', 440);   
+    
+    localStorage.setItem('note11', 'off');
+    localStorage.setItem('note11rest', 'on');
+    localStorage.setItem('note11tie', 'off');
+    localStorage.setItem('note11accent', 'off');
+    localStorage.setItem('note11pitch', 440);
+    
+    localStorage.setItem('note12', 'off');
+    localStorage.setItem('note12rest', 'on');
+    localStorage.setItem('note12tie', 'off');
+    localStorage.setItem('note12accent', 'off');
+    localStorage.setItem('note12pitch', 440);     
+    
+    localStorage.setItem('note13', 'off');
+    localStorage.setItem('note13rest', 'on');
+    localStorage.setItem('note13tie', 'off');
+    localStorage.setItem('note13accent', 'off');
+    localStorage.setItem('note13pitch', 440);   
+    
+    localStorage.setItem('note14', 'off');
+    localStorage.setItem('note14rest', 'on');
+    localStorage.setItem('note14tie', 'off');
+    localStorage.setItem('note14accent', 'off');
+    localStorage.setItem('note14pitch', 440);   
+
+    localStorage.setItem('note15', 'off');
+    localStorage.setItem('note15rest', 'on');
+    localStorage.setItem('note15tie', 'off');
+    localStorage.setItem('note15accent', 'off');
+    localStorage.setItem('note15pitch', 440);   
+    
+    localStorage.setItem('note16', 'off');
+    localStorage.setItem('note16rest', 'on');
+    localStorage.setItem('note16tie', 'off');
+    localStorage.setItem('note16accent', 'off');
+    localStorage.setItem('note16pitch', 440);   
+    
+    // Start looping 
+    localStorage.setItem('loop_point', 1);
+    playIntervals = setInterval(play_pause_main_loop, localStorage.getItem('tempo'));
+
+  // knobs
+    $( "#volume1" ).slider({
+      orientation: "vertical",
+      range: "min",
+      min: 1,
+      max: 100,
+      slide: function( event, ui ) {
+        set_volume(ui.value);
+      }
+    });  
+  
+    $( "#tempo1" ).slider({
+      orientation: "vertical",
+      range: "min",
+      min: 200,
+      max: 1200,
+      slide: function( event, ui ) {
+        set_tempo(ui.value);
+      }
+    });    
+    var rotary_pitch = $('#note_pitch').rotaryswitch({
+        minimum: 220,
+        maximum: 880,
+        step: 10,
+        beginDeg: 1,
+        loclengthDeg: 359,
+        showMarks: true
+    });
+  
+    rotary_pitch.on('change', function(e) {
+      set_pitch(e);
+    });
+  
+    var rotary_attack = $('#attack1').rotaryswitch({
+        minimum: 220,
+        maximum: 880,
+        step: 10,
+        beginDeg: 1,
+        loclengthDeg: 359,
+        showMarks: true
+    });
+  
+    rotary_attack.on('change', function(e) {
+      // do something(e);
+    });
+  
+    var rotary_decay = $('#decay1').rotaryswitch({
+        minimum: 220,
+        maximum: 880,
+        step: 10,
+        beginDeg: 1,
+        loclengthDeg: 359,
+        showMarks: true
+    });
+  
+    rotary_decay.on('change', function(e) {
+      // do something(e);
+    });
+  
+    var rotary_sustain = $('#sustain1').rotaryswitch({
+        minimum: 200,
+        maximum: 1200,
+        step: 10,
+        beginDeg: 1,
+        loclengthDeg: 359,
+        showMarks: true
+    });
+  
+    rotary_sustain.on('change', function(e) {
+      set_sustain(e);
+    });
+  
+    var rotary_release = $('#release1').rotaryswitch({
+        minimum: 220,
+        maximum: 880,
+        step: 10,
+        beginDeg: 1,
+        loclengthDeg: 359,
+        showMarks: true
+    });
+  
+    rotary_release.on('change', function(e) {
+      // do something(e);
+    });
+  
+  
+  /* Populate formfields from sessionStorage */
+  var inputfields = document.getElementsByTagName ('input');
+  for(var loop = 0;loop<inputfields.length;loop++) {
+    if(inputfields[loop].type = 'text') {
+      if(typeof(sessionStorage.getItem(inputfields[loop].id)) == 'undefined') {
+        sessionStorage.setItem(inputfields[loop].id, '');
+      } else {
+        inputfields[loop].value = sessionStorage.getItem(inputfields[loop].id);
+      }
+    }
+  }
+  /* Register ESC event to close modal  */
+  
+}
+  
+function play_pause_main_loop() {
+    if(localStorage.getItem('loop_point') == 17) {
+        localStorage.setItem('loop_point', 1);    
+    }
+    if(localStorage.getItem('loop') == 'play') {
+        play_note(localStorage.getItem('loop_point'));
+    } else {
+        not_play_note();
+    }
+
+    var increment = Number(localStorage.getItem('loop_point')) + 1;
+    localStorage.setItem('loop_point', increment);
+}
+
+function play_note(note) {
+    note1_led.style.background = 'black';
+    note2_led.style.background = 'black';
+    note3_led.style.background = 'black';
+    note4_led.style.background = 'black';
+    note5_led.style.background = 'black';
+    note6_led.style.background = 'black';
+    note7_led.style.background = 'black';
+    note8_led.style.background = 'black';
+    note9_led.style.background = 'black';
+    note10_led.style.background = 'black';
+    note11_led.style.background = 'black';
+    note12_led.style.background = 'black';
+    note13_led.style.background = 'black';
+    note14_led.style.background = 'black';
+    note15_led.style.background = 'black';
+    note16_led.style.background = 'black';
+
+    // loop through each note to play it
+    document.getElementById('note' + note + '_led').style.background = 'red';
+    if(localStorage.getItem('note' + note + 'rest') == 'on') {
+        play_a_note(note);
+    }
+}
+  
+function play_a_note(a_note) {
+    var sounded_note = audioCtx.createOscillator();
+  
+    sounded_note.type = 'sawtooth';
+    sounded_note.frequency.value = localStorage.getItem('note' + a_note + 'pitch');
+
+    sounded_note.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    if(localStorage.getItem('note' + a_note + 'accent') == 'off') {
+        gainNode.gain.value = parseFloat((localStorage.getItem('volume') / 100));
+    } else {
+        gainNode.gain.value = parseFloat((localStorage.getItem('volume') / 100) * 2);
+    }
+  
+    sounded_note.start();
+    // TODO tie across rests?
+    if(localStorage.getItem('note' + a_note + 'tie') == 'on') {
+        var duration =  localStorage.getItem('tempo')
+    } else {
+        var duration = localStorage.getItem('sustain');
+    } 
+// Timeout needs to be sustain lengh setting  
+    setTimeout(function() {
+            sounded_note.stop();
+    }, duration);
+}
+
+function not_play_note() {
+    if(tempo1_led.style.background == 'black') {
+        tempo1_led.style.background = 'red';
+    } else {
+        tempo1_led.style.background = 'black';
+    }
+}
+
+function doNote(this_evt) {
+    // WHEN USER PRESS A SPECIFIC NOTE
+    // STOP PLAYING 
+    localStorage.setItem('loop', 'stop');
+    play1_led.style.background = 'black';
+    
+    // Highlight Note Pressed:
+    note1_led.style.background = 'black';
+    note2_led.style.background = 'black';
+    note3_led.style.background = 'black';
+    note4_led.style.background = 'black';
+    note5_led.style.background = 'black';
+    note6_led.style.background = 'black';
+    note7_led.style.background = 'black';
+    note8_led.style.background = 'black';
+    note9_led.style.background = 'black';
+    note10_led.style.background = 'black';
+    note11_led.style.background = 'black';
+    note12_led.style.background = 'black';
+    note13_led.style.background = 'black';
+    note14_led.style.background = 'black';
+    note15_led.style.background = 'black';
+    note16_led.style.background = 'black';
+    
+    localStorage.setItem('note1', 'off');     
+    localStorage.setItem('note2', 'off');
+    localStorage.setItem('note3', 'off');
+    localStorage.setItem('note4', 'off');
+    localStorage.setItem('note5', 'off');
+    localStorage.setItem('note6', 'off');
+    localStorage.setItem('note7', 'off');
+    localStorage.setItem('note8', 'off');
+    localStorage.setItem('note9', 'off');
+    localStorage.setItem('note10', 'off');
+    localStorage.setItem('note11', 'off');
+    localStorage.setItem('note12', 'off');
+    localStorage.setItem('note13', 'off');
+    localStorage.setItem('note14', 'off');
+    localStorage.setItem('note15', 'off');
+    localStorage.setItem('note16', 'off');
+    
+    if(localStorage.getItem(this_evt.target.id + 'rest') == 'on') {
+        note_rest_led.style.background = 'red';
+    } else {
+        note_rest_led.style.background = 'black';
+    }
+    
+    if(localStorage.getItem(this_evt.target.id + 'tie') == 'on') {
+        note_tie_led.style.background = 'red';
+    } else {
+        note_tie_led.style.background = 'black';
+    }
+    
+    if(localStorage.getItem(this_evt.target.id + 'accent') == 'on') {
+        note_accent_led.style.background = 'red';
+    } else {
+        note_accent_led.style.background = 'black';
+    }
+    
+    note_pitch.value = localStorage.getItem(this_evt.target.id + 'pitch');
+
+    localStorage.setItem(this_evt.target.id, 'on');
+    var children = document.getElementById(this_evt.target.id).children;
+    children[0].style.background = 'red';
+
+    // TODO play the note the user clicked on
+}
+
+function doPlay_Pause() {
+    // RESET TO THE BEGINNING OF THE LOOP
+    localStorage.setItem('loop_point', 1);
+
+    if(localStorage.getItem('loop') == 'play') {
+        localStorage.setItem('loop', 'stop');
+        play1_led.style.background = 'black';
+    } else {
+        localStorage.setItem('loop', 'play');
+        play1_led.style.background = 'red';
+    }
+}
+
+function set_unset_tie(this_evt) {
+    var children = document.getElementById(this_evt.target.id).children;
+    for(var i = 1;i < 17;i++) {
+        if(localStorage.getItem('note' + i) == 'on') {
+            if(localStorage.getItem('note' + i + 'tie') == 'on') {
+                localStorage.setItem('note' + i + 'tie', 'off');
+                children[0].style.background = 'black';
+            } else {
+                localStorage.setItem('note' + i + 'tie', 'on');
+                children[0].style.background = 'red';
+            }
+        }
+    }
+}
+
+function set_unset_rest(this_evt) {
+    var children = document.getElementById(this_evt.target.id).children;
+    for(var i = 1;i < 17;i++) {
+        if(localStorage.getItem('note' + i) == 'on') {
+            if(localStorage.getItem('note' + i + 'rest') == 'on') {
+                localStorage.setItem('note' + i + 'rest', 'off');
+                children[0].style.background = 'black';
+            } else {
+                localStorage.setItem('note' + i + 'rest', 'on');
+                children[0].style.background = 'red';
+            }
+        }
+    }
+}
+
+function set_unset_accent(this_evt) {
+    var children = document.getElementById(this_evt.target.id).children;
+    for(var i = 1;i < 17;i++) {
+        if(localStorage.getItem('note' + i) == 'on') {
+            if(localStorage.getItem('note' + i + 'accent') == 'on') {
+                localStorage.setItem('note' + i + 'accent', 'off');
+                children[0].style.background = 'black';
+            } else {
+                localStorage.setItem('note' + i + 'accent', 'on');
+                children[0].style.background = 'red';
+            }
+        }
+    }
+}
+
+function set_pitch(this_evt) {
+    for(var i = 1;i < 17;i++) {
+        if(localStorage.getItem('note' + i) == 'on') {
+            localStorage.setItem('note' + i + 'pitch', note_pitch.value);
+        }
+    }
+}
+    
+function set_tempo(tempo_val) {
+    localStorage.setItem('tempo', tempo_val);
+    clearInterval(playIntervals);
+    playIntervals = setInterval(play_pause_main_loop, tempo_val);
+}
+
+function set_sustain(evt) {
+    localStorage.setItem('sustain', evt.target.value);
+}
+  
+function set_volume(this_evt) {
+    localStorage.setItem('volume', this_evt);
+}
+  
+  /* Modal functions */
+  function showModal() {
+    document.getElementById('modal_shade').style.display = 'block';
+    document.getElementById('modal_box').style.display = 'block';
+    hideAllTabs();
+    document.getElementById('modal_tab_2_content').style.display = 'block';
+  }
+  function hideModal() {
+    document.getElementById('modal_shade').style.display = 'none';
+    document.getElementById('modal_box').style.display = 'none';
+    hideAllTabs();
+    document.getElementById('form_error').style.display = 'none';
+  }
+  function showTabContent(tabtoshow) {
+    hideAllTabs();
+    document.getElementById(tabtoshow).style.display = 'block';
+  }
+  function hideAllTabs() {
+    document.getElementById('modal_tab_1_content').style.display = 'none';
+    document.getElementById('modal_tab_2_content').style.display = 'none';
+    document.getElementById('modal_tab_3_content').style.display = 'none';
+  }
+  function validateField(fieldName) {
+    sessionStorage.setItem(fieldName.id, fieldName.value);
+    if(fieldName.checkValidity() == false) {
+      fieldName.style.background = 'plum';
+      document.getElementById('form_error').innerHTML = fieldName.getAttribute('errdata');
+      document.getElementById('form_error').style.display = 'block';
+    } else {
+      fieldName.style.background = 'white';
+      document.getElementById('form_error').style.display = 'none';
+    }
+  }
+
+  </script>
+<style>
+    body {
+      font: 10px arial, sans-serif;
+    }
+  
+    aside {
+      width: 80px;
+      padding-left: 10px;
+      margin-left: 10px;
+      margin-top: -4px;
+      background-image: url('img/brushed.png');
+      background-position: 90% 10%; 
+    }
+  
+    .rounds {
+        display: inline-block;
+        position: relative;
+        height: 54px;
+        width: 40px;
+        padding: 20px;
+    }
+  
+    .sm_rounds {
+        display: inline-block;
+        position: relative;
+        height: 54px;
+        width: 40px;
+        padding: 20px;
+    }
+      .sm_rounds input {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .sm_rounds section {
+        position: absolute;
+        bottom: 0;
+        left: 8px;
+      }
+  
+    .panel {
+        display: block;
+        position: relative;
+        background-image: url('img/brushed.png');
+        background-size: 50%;
+        width: 700px;
+        height: 500px;
+    }
+
+    .panel_top {
+        position: absolute;
+        border: black 1px solid;
+        border-radius: 4px;
+        top: 30px;
+        left: 170px;
+        width: 360px;
+        margin: 0 auto;
+    }
+      .panel_top aside {
+        width: 45px;
+      }
+      .panel_top section {
+        margin-top: 6px;
+        padding-left: 18px;
+      }
+      .panel_left {
+        width: 150px;
+        position: absolute;
+        top: 160px;
+        left: 20px;
+        height: 150px;
+        border: black 1px solid;
+        border-radius: 4px;
+      }
+        .panel_left aside {
+          width: 90px;
+        }
+  
+        #volume1div {
+          display: inline-block;
+          padding: 10px;
+          padding-left: 30px;
+          height: 60px;
+        }
+  
+        #volume1div section {
+          padding-top: 10px;
+          margin-left: -20px;
+        }
+  
+        #tempo1div {
+          display: inline-block;
+          padding: 10px;
+          height: 60px;
+        }
+        #tempo1div section {
+          padding-top: 10px;
+          margin-left: -10px;
+        }
+
+        #tempo1_led {
+          position: absolute;
+        }
+  
+      .panel_center {
+        width: 260px;
+        position: absolute;
+        top: 160px;
+        left: 220px;
+        height: 150px;
+        border: black 1px solid;
+        border-radius: 4px;      
+      }
+        .panel_center aside {
+          width: 80px;
+        }
+        .panel_center section {
+          padding-left: 28px;        
+        }
+        .note_controls {
+          position: absolute;
+          left: 130px;
+          top: 20px;
+        }
+      .panel_right {
+        padding 10px;
+        width: 130px;
+        position: absolute;
+        top: 160px;
+        left: 530px;
+        height: 150px;
+        border: black 1px solid;
+        border-radius: 4px;      
+      }
+        .panel_right aside {
+          width: 70px;
+        }
+        #start_stop {
+          margin: 20px;
+        }
+  
+      .panel_notes {
+        width: 640px;
+        position: absolute;
+        top: 340px;
+        left: 20px;
+        padding: 1px;
+        height: 120px;
+        border: black 1px solid;
+        border-radius: 4px;
+      }
+       .panel_notes aside {
+          width: 50px;
+        }
+      .note_buttons {
+        position: absolute;
+        top: 9px;
+        left: 24px;
+      }
+  
+    #start_stop {
+        display: inline-block;
+        position: relative;
+        background: grey;
+        height: 80px;
+        width: 70px;        
+    }
+    .play_led {   
+        position: absolute;
+        top: 70%;
+        left: 40%;
+        width: 0; 
+        height: 0; 
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 6px solid red;
+    }  
+    .led {
+        position: absolute;
+        background: red;
+        top: 70%;
+        border-radius: 3px;
+        left: 40%;
+        width: 6px;
+        height: 6px;
+    }
+    .notes {
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 2px;
+        margin-right: 2px;
+        position: relative;
+        background: grey;
+        height: 80px;
+        width: 30px;
+    } 
+      .notes section {
+        margin-top: 90px;
+        margin-left: -24px;
+      }
+    .clearall {
+        clear: both;
+    }
+  
+    /* Modal */
+    #modal_shade {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: black;
+      opacity: .4;
+    }
+  
+    #modal_box {
+      display: none;
+      position: absolute;
+      top: 20%;
+      left: 20%;
+      bottom: 20%;
+      right: 20%;
+      background-color: white;
+      opacity: 1;
+    }
+    .tabs {
+        min-height: 24px;
+        background-color: skyblue;
+        margin-top: -8px;
+    }
+    .tabs li {
+      height: 20px;
+      display: inline-block;
+      width: 10%;
+      margin: 8px 16px 8px 16px;
+      padding: 0px 16px 0px 16px;
+      border-right: blue 2px solid;
+      border-bottom: blue 2px solid;
+      border-top: blue 1px solid;
+      border-left: blue 1px solid;
+    }
+    #modal_box h2 {
+      border-right: blue 2px solid;
+      border-bottom: blue 2px solid;
+      border-top: blue 1px solid;
+      border-left: blue 1px solid;     
+      padding-left: 8px;
+      width: 80%;
+    }
+    #modal_box section {
+      padding: 8px;
+    }
+    #closemodal {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+    #form_error {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 16px;
+      background: red;
+      color: yellow;
+      width: 100%;
+    }
+  .modal_section label {
+    display: inline-block;
+    width: 30%;
+  }
+  .modal_section input {
+    display: inline-block;
+    width: 60%;
+  }
+  #form_error {
+    display: none;
+  }
+  
+    /* End Modal */
+</style>
+</head>
+<body>
+    <div class="panel">
+      <div><a href="#" onclick="showModal()">ClickMe</a></div>
+      </div>
+        <div class="panel_top">
+            <aside>A D S R</aside>
+            <div class="sm_rounds">
+                <input type="text" size="5" id="attack1" class="dial">
+                <section>ATTACK</section>
+            </div>
+            <div class="sm_rounds">
+                <input type="text" size="5" id="decay1" class="dial">
+                <section>DECAY</section>
+            </div>
+            <div class="sm_rounds">
+                <input type="text" size="5" id="sustain1" class="dial">
+                <section>SUSTAIN</section>
+            </div>     
+            <div class="sm_rounds">
+                <input type="text" size="5" id="release1" class="dial">
+                <section>RELEASE</section>
+            </div>
+        </div>
+      
+        <div class="panel_left">
+            <aside>VOLUME/TEMPO</aside>
+            <div id="volume1div">
+                <div id="volume1"></div>
+                <!-- <input type="text" size="5" id="volume1" class="dial" data-min="-50" data-max="50"> -->
+                <section>VOLUME</section>
+            </div>
+            <div id="tempo1div">
+                <div id="tempo1"></div>
+                <!-- <input type="text" size="5" id="tempo1" class="dial" value="0"> -->
+                <section>TEMPO</section>
+                <div class="led" id="tempo1_led"></div>
+            </div>
+        </div>
+          
+        <div class="panel_center">
+            <aside>NOTE CONFIG</aside>
+            <div class="rounds">
+                <input type="text" size="5" id="note_pitch" class="dial" data-min="-50" data-max="50">
+            </div>
+            <section>PITCH</section>
+            <div class="note_controls">
+                <div class="notes" id="note_rest">
+                    <div class="led" id="note_rest_led"></div>
+                    <section>REST</section>
+                </div>
+                <div class="notes" id="note_accent">
+                    <div class="led" id="note_accent_led"></div>
+                    <section>ACN</section>
+                </div>
+              
+                <div class="notes" id="note_tie">
+                    <div class="led" id="note_tie_led"></div>
+                    <section>TIE</section>
+                </div>
+            </div>
+        </div>
+      
+        <div class="panel_right">
+            <aside>PLAY/PAUSE</aside>
+            <div id="start_stop">
+                <div class="led" id="play1_led">
+                </div>
+            </div>
+        </div>
+          
+        <div class="panel_notes">
+            <aside>NOTES</aside>
+            <div class="note_buttons">
+                <div class="notes" id="note1">
+                    <div class="led" id="note1_led"></div>
+                </div>
+                <div class="notes" id="note2">
+                    <div class="led" id="note2_led"></div>
+                </div>
+                <div class="notes" id="note3">
+                    <div class="led" id="note3_led"></div>
+                </div>
+                <div class="notes" id="note4">
+                    <div class="led" id="note4_led"></div>
+                </div>
+                <div class="notes" id="note5">
+                    <div class="led" id="note5_led"></div>
+                </div>
+                <div class="notes" id="note6">
+                    <div class="led" id="note6_led"></div>
+                </div>
+                <div class="notes" id="note7">
+                    <div class="led" id="note7_led"></div>
+                </div>
+                <div class="notes" id="note8">
+                    <div class="led" id="note8_led"></div>
+                </div>
+                <div class="notes" id="note9">
+                    <div class="led" id="note9_led"></div>
+                </div>
+                <div class="notes" id="note10">
+                    <div class="led" id="note10_led"></div>
+                </div>
+                <div class="notes" id="note11">
+                    <div class="led" id="note11_led"></div>
+                </div>
+                <div class="notes" id="note12">
+                    <div class="led" id="note12_led"></div>
+                </div>
+                <div class="notes" id="note13">
+                    <div class="led" id="note13_led"></div>
+                </div>
+                <div class="notes" id="note14">
+                    <div class="led" id="note14_led"></div>
+                </div>
+                <div class="notes" id="note15">
+                    <div class="led" id="note15_led"></div>
+                </div>
+                <div class="notes" id="note16">
+                    <div class="led" id="note16_led"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <!-- Save/Load Modal (Hidden by default) -->
+    <div id="modal_shade">  </div> 
+      <div id="modal_box">
+        <div id="closemodal" onclick="hideModal()">X</div>
+        <ul class="tabs">
+          <li id="modal_tab_1" onclick="showTabContent('modal_tab_1_content')">Load</li>
+          <li id="modal_tab_1" onclick="showTabContent('modal_tab_2_content')">Save</li>
+          <li id="modal_tab_1" onclick="showTabContent('modal_tab_3_content')">About</li>
+        </ul>
+        <div class="modal_content" id="modal_tab_1_content">
+          <h2>
+            Load Song    
+          </h2>
+          <section class="modal_section">
+            <form id="loadsong">
+              <div>
+                <label>Genere</label>
+                <input type="text" name="genere" id="genere" onChange="validateField(this)" pattern="(rock)" errdata="enter valide genere">
+              </div>
+              <div>
+                <label>Title</label>
+                <input type="text" name="title" id="title" onChange="validateField(this)" pattern="(crank)" errdata="enter valid title">
+            </div>
+            </form>
+          </section>
+        </div>
+        <div class="modal_content" id="modal_tab_2_content">
+          <h2>
+            Save Song
+          </h2>     
+          <section class="modal_section">
+            <form id="savesong">
+              <div>
+                <label>Genere</label>
+                <input type="text" name="genere" id="genere" onChange="validateField(this)" pattern="(rock)" errdata="enter valid genere">
+              </div>
+              <div>
+                <label>Title</label>
+                <input type="text" name="title" id="title" onChange="validateField(this)" pattern="(crank)" errdata="enter valid title">
+              </div>
+              <div>
+                <label>Author</label>
+                <input type="text" name="author" id="author" onChange="validateField(this)" pattern="(moo)" errdata="enter valid author">
+              </div>
+            </form>     
+          </section>        
+        </div>
+        <div class="modal_content" id="modal_tab_3_content">
+          <h2>
+            About Synth
+          </h2>
+          <section class="modal_section">
+            About information goes here
+          </section>       
+        </div>      
+      </div>
+  <div id="form_error">Error goes here</div>
+</body>
+</html>
