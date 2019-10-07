@@ -1,0 +1,38 @@
+:root {
+    margin: 0;
+    border: 0;
+}
+body {
+    background-color: antiquewhite;
+}
+#metronome {
+    display: grid;
+    grid-template-columns: repeat(16, 1.5em);
+    grid-template-rows: auto auto auto;
+}
+.led {
+    width: 1em;
+    height: 3em;
+    margin: .3em;
+}
+a:focus {
+    outline: none;
+}
+.one {
+    background: blueviolet;
+}
+a:focus > .one {
+    background: lightskyblue;
+}
+.four {
+    background: red;
+}
+a:focus > .four {
+    background: orange;
+}
+.five {
+    background: limegreen;
+}
+a:focus > .five {
+    background: lightgreen;
+}
